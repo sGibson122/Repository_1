@@ -65,7 +65,8 @@ public class EveryTableMain extends HttpServlet {
 			// Task overdue
 		}
 		
-		String homePage = "<head>\r\n"
+		String homePage = "<!doctype html public \\\"-//w3c//dtd html 4.0 \" + \"transitional//en\\\">"
+				+ "<head>\r\n"
 				+ "<meta charset=\"ISO-8859-1\">\r\n"
 				+ "<title>EveryTable Main Page</title>\r\n"
 				+ "<link rel=\"stylesheet\" href=\"StylesMain.css\">\r\n"
@@ -289,22 +290,32 @@ public class EveryTableMain extends HttpServlet {
 		Boolean overdue = false;
 		String status = "";
 		
+		int month = currentDate.getMonth() + 1;
+		
 		//String currentDateActual = ("" + currentDate.getMonth() + 1) + "/" + currentDate.getDate() + "/" + (currentDate.getYear() + 1900);
 		
-		/*
-		if(Integer.parseInt(dateParts[2]) == (currentDate.getYear() +1900))
+		
+		if(Integer.parseInt(dateParts[2]) == (currentDate.getYear() + 1900))
 		{
+			System.out.println(Integer.parseInt(dateParts[2]));
 			System.out.println("|Boolean #1|");
 			System.out.println(Integer.parseInt(dateParts[2]) == (currentDate.getYear() +1900));
-			if((Integer.parseInt(dateParts[1]) > (currentDate.getMonth() + 1)))
+			
+			//System.out.println("Current date ---> " + month);
+			//System.out.println("Due date ---> " + dateParts[0]);
+			
+			
+			if((Integer.parseInt(dateParts[0]) == (0 + month)))
 			{
-				
+				//System.out.println((Integer.parseInt(dateParts[1])));
+
 				System.out.println("|Boolean #2|");
-				System.out.println((Integer.parseInt(dateParts[1]) > (currentDate.getMonth() + 1)));
-				if(Integer.parseInt(dateParts[0]) > currentDate.getDate())
+				System.out.println((Integer.parseInt(dateParts[1]) > (0 + month)));
+				if(Integer.parseInt(dateParts[1]) > currentDate.getDate())
 				{
+					System.out.println((Integer.parseInt(dateParts[1])));
 					System.out.println("|Boolean #3|");
-					System.out.println(Integer.parseInt(dateParts[0]) > currentDate.getDate());
+					System.out.println(Integer.parseInt(dateParts[1]) > currentDate.getDate());
 					overdue = false;
 					status = "On Time";
 				}
@@ -314,6 +325,11 @@ public class EveryTableMain extends HttpServlet {
 					status = "Overdue";
 				}
 			}
+			else if((Integer.parseInt(dateParts[0]) > (0 + month)))
+			{
+				overdue = false;
+				status = "On Time";
+			}
 			else
 			{
 				overdue = true;
@@ -322,6 +338,7 @@ public class EveryTableMain extends HttpServlet {
 		}
 		else if(Integer.parseInt(dateParts[2]) > (currentDate.getYear() +1900))
 		{
+			System.out.println((Integer.parseInt(dateParts[2])));
 			System.out.println("|Boolean #4|");
 			System.out.println(Integer.parseInt(dateParts[2]) > (currentDate.getYear() +1900));
 			overdue = false;
@@ -329,19 +346,20 @@ public class EveryTableMain extends HttpServlet {
 		}
 		else if(Integer.parseInt(dateParts[2]) < (currentDate.getYear() +1900))
 		{
+			System.out.println((Integer.parseInt(dateParts[2])));
 			System.out.println("|Boolean #5|");
 			System.out.println(Integer.parseInt(dateParts[2]) < (currentDate.getYear() +1900));
 			overdue = true;
 			status = "Overdue";
 		}
 		
-		*/
+
 	
 		String format = "<table>\r\n"
 				+ "		<tr>\r\n"
 				+ "			<th colspan=\"5\">"
 				+ taskName
-				+ "</th>\r\n"
+				+ "</th>"
 				+ "		</tr>"
 				+ "		<tr>"
 				+ "			<td>"

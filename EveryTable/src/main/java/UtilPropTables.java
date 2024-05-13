@@ -7,7 +7,7 @@ import java.io.FileNotFoundException;
 
 public class UtilPropTables {
    static final boolean _W = System.getProperty("os.name").toLowerCase().contains("windows");
-   static String _PROP_FILENAME_WIN_LOCAL = "C:\\Users\\shima\\workspace4830\\workspace4830-EveryTable\\EveryTable\\src\\main\\configTables.properties";
+   static String _PROP_FILENAME_WIN_LOCAL = "C:\\Users\\shima\\workspace4830\\workspace4830-EveryTable\\EveryTable\\src\\main\\webapp\\configTables.properties";
    static String _PROP_FILENAME_OSX_LOCAL = "/YOUR_PATH/EveryTable/WebContent/configTables.properties";
    // * Remote server path
    static String _PROP_FILENAME_REMOTE = "/var/lib/tomcat9/webapps/EveryTable/configTables.properties";
@@ -19,6 +19,9 @@ public class UtilPropTables {
          if (new File(_PROP_FILENAME_WIN_LOCAL).exists()) {
             System.out.println("[DBG] Loaded: " + new File(_PROP_FILENAME_WIN_LOCAL).getAbsolutePath());
             inputStream = new FileInputStream(_PROP_FILENAME_WIN_LOCAL);
+         }else
+         {
+        	 System.out.println("That's not there either!!!!!");
          }
       } else {
          if (new File(_PROP_FILENAME_OSX_LOCAL).exists()) {
@@ -29,6 +32,9 @@ public class UtilPropTables {
       if (new File(_PROP_FILENAME_REMOTE).exists()) {
          System.out.println("[DBG] Loaded: " + new File(_PROP_FILENAME_REMOTE).getAbsolutePath());
          inputStream = new FileInputStream(_PROP_FILENAME_REMOTE);
+      }else
+      {
+    	  System.out.println("It's not THEREEEEEEEEEEEE!");
       }
       if (inputStream == null) {
          throw new FileNotFoundException();

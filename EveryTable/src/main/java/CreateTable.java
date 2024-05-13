@@ -46,6 +46,7 @@ public class CreateTable extends HttpServlet {
       }
 
       // Set response content type
+    
       response.setContentType("text/html");
       PrintWriter out = response.getWriter();
       String title = "Insert Data to DB table";

@@ -7,7 +7,7 @@ public class DBConnectionTables {
    static void getDBConnectionTables() {
       System.out.println("-------- MySQL JDBC Connection Testing ------------");
       try {
-         Class.forName("com.mysql.jdbc.Driver");
+         Class.forName("com.mysql.cj.jdbc.Driver");
       } catch (ClassNotFoundException e) {
          System.out.println("Where is your MySQL JDBC Driver?");
          e.printStackTrace();
