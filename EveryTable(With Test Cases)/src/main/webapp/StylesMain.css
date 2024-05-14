@@ -1,0 +1,24 @@
+@charset "ISO-8859-1";
+
+table
+{
+	border-style: solid;
+	border: all;
+}
+
+td
+{
+	border-style: solid;
+	border: all;
+	border-width: 2px;
+}
+
+h1
+{
+	text-align: center;
+}
+
+h2
+{
+	text-align: center;
+}
