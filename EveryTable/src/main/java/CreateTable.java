@@ -26,6 +26,8 @@ public class CreateTable extends HttpServlet {
       String dueDate = request.getParameter("dueDate");
       String people = request.getParameter("peopleTask");
       String details = request.getParameter("details");
+      String userName = request.getParameter("userName");
+      String passWord = request.getParameter("passWord");
 
 
       Connection connection = null;
@@ -56,6 +58,8 @@ public class CreateTable extends HttpServlet {
             "<head><title>" + title + "</title></head>\n" + //
             "<form action='EveryTableMain'>" +
             "<h2>Table Succesfully Added!</h2>" +
+			"<input type='hidden' name='userName' value='" + userName + "'>" +
+			"<input type='hidden' name='passWord' value='" + passWord + "'>" +
             "<input type='submit' value='Return To Main Page.'>" +
             "</form>" +
 

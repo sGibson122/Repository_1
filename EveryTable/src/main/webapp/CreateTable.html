@@ -5,7 +5,7 @@
 <title>Create Table</title>
 <link rel="stylesheet" href="StylesMain.css">
 </head>
-<body>
+<body onload="bypass()">
 
 	<form action="CreateTable">
 	
@@ -21,7 +21,12 @@
 			<td><input name="taskName" type="text" placeholder="*Task Name*"></td>
 			<td><input name="dueDate" type="text" placeholder="*Due date of Task* e.g: '04/17/2024'"></td>
 			<td><input name="peopleTask" type="text" placeholder="*People Assigned To Task* (e.g: Sandra,Mike,Bronwyn - *NO SPACES*)"></td>
+			<td><input id='user' type='hidden' name='userName' value='uyfdvv'></td>
+			<td><input id='pass' type='hidden' name='passWord' value='usyfgb'></td>
 			<td><input type="submit" value="Submit Task"></td>
+
+
+
 		</tr>
 		<tr>
 			<td colspan="4"><textarea name="details" placeholder="*Task Details*"></textarea></td>
@@ -30,6 +35,8 @@
 		</table>
 		
 	</form>
+	
+	<!-- Remember to implement feature that ensures that all fields are filled and makes sure it is uploaded to databse -->
 	
 	
 	<!-- Old HTML -->
@@ -69,6 +76,19 @@
 		
 	</form>
 	 -->
+	 
+	 <script>
+		 function bypass(){
+			 const urlParams = new URLSearchParams(window.location.search);
+			 const Username = urlParams.get('userName');
+			 const Password = urlParams.get('passWord');
+			 document.querySelector('#user').value=Username;
+			 document.querySelector('#pass').value=Password;
+			 }
+	 </script>
 
 </body>
+
+
+
 </html>

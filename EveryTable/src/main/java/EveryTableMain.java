@@ -30,10 +30,27 @@ public class EveryTableMain extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+	      Connection connection4 = null;
+	      String insertSql = "DELETE FROM EveryTablePrimary WHERE id = ?";
+
+	      try {
+	    	 DBConnectionTables.getDBConnectionTables();
+	         connection4 = DBConnectionTables.connection;
+	         PreparedStatement preparedStmt4 = connection4.prepareStatement(insertSql);
+	         preparedStmt4.setString(1, request.getParameter("TABLE_ID"));
+	         preparedStmt4.execute();
+	         connection4.close();
+	      } catch (Exception e) {
+	         e.printStackTrace();
+	      }
+
+	
+		
 		PrintWriter out = response.getWriter();
 		String user = request.getParameter("userName");
-		String password = request.getParameter("passWord");
-		
+		String password = request.getParameter("passWord");		
+				
+				
 		Date currentDate = new Date();
 		String currentDateActual = ("" + currentDate.getMonth() + 1) + "/" + currentDate.getDate() + "/" + (currentDate.getYear() + 1900);
 		
@@ -71,7 +88,7 @@ public class EveryTableMain extends HttpServlet {
 				+ "<title>EveryTable Main Page</title>\r\n"
 				+ "<link rel=\"stylesheet\" href=\"StylesMain.css\">\r\n"
 				+ "</head>\r\n"
-				+ "<body>\r\n"
+				+ "<body style='background: linear-gradient(0deg, rgba(185,34,195,1) 0%, rgba(253,187,45,1) 100%);'>\r\n"
 				+ "	<form>\r\n"
 				+ "	\r\n"
 				+ "		<a href='Index.html'><p>Back to login page<p></a>"
@@ -80,16 +97,24 @@ public class EveryTableMain extends HttpServlet {
 				+ "		\r\n"
 				+ "		<table>\r\n"
 				+ "			<tr>\r\n"
-				+ "				<td><button><a href=\"CreateTable.html\">Create New Table...</button></a></td>"
-				+ "				<td><input type=\"button\" value=\"Delete Table\"></td>\r\n"
-				+ "				<td><input type=\"button\" value=\"Table Settings\"></td>\r\n" //Table settings will include features such as resizing tables and recoloring tables
+				+ "				<td><form action='CreateTable.html'>\r\n"
+				+ "<input type='hidden' name='userName' value='" + user + "'>"
+				+ "<input type='hidden' name='passWord' value='" + password + "'>"
+				+ "<input type='submit' value='Create Table' formaction='CreateTable.html'>\r\n"
+				+ "</form></td>"
+//				+ "				<td><input type=\"button\" value=\"Delete Table\"></td>\r\n"
+//				+ "				<td><input type=\"button\" value=\"Table Settings\"></td>\r\n" //Table settings will include features such as resizing tables and recoloring tables
 				+ "             <td><p style='color:red;'>Current User:</p></td>"
-				+ "             <td><p style='color:red; text-decoration: underline;'>" + user + "</p></td>"
+				+ "             <td><p style='color:#0FF673; text-decoration: underline;'>" + user + "</p></td>"
 				+ "				\r\n"
 				+ "			</tr>\r\n"
 				+ "		</table>	\r\n"
-				+ "		<hr>\r\n";
+				+ "		<hr>\r\n"
+				+ "     <div style='width:80%'>";
 		
+		
+		
+		//DeleteTable()
 		
 		//User validation
 		
@@ -186,16 +211,18 @@ public class EveryTableMain extends HttpServlet {
 	             String dueDate = rs.getString("DUE_DATE").trim();
 	             String people = rs.getString("PEOPLE").trim();
 	             String details = rs.getString("DETAILS").trim();
+	             String iD = rs.getString("id").trim();
+	             
 	             
 	             String[] individualPeople = people.split(","); //here
 	             
 	             //out.println(createTables(taskName, dueDate, individualPeople[2], details));
 	             
-	             
+	             //Builds only the tables the current user is allowed to see.
 	             for(int i = 0; i < individualPeople.length; i++)
 	             {
 	            	 if(user.equals(individualPeople[i]))
-	            		 out.println(createTables(taskName, dueDate, people, details));
+	            		 out.println(createTables(taskName, dueDate, people, details, iD, user, password));
 	             }
 	             
 	     		
@@ -224,6 +251,7 @@ public class EveryTableMain extends HttpServlet {
 	      }
 	      
 	      out.println("		\r\n"
+	    		    + " </div>\r\n"
 					+ "	</form>\r\n"
 					+ "</body>");
 		
@@ -274,12 +302,17 @@ public class EveryTableMain extends HttpServlet {
 */
 		
 		//Query like Get table * where people includes user
+	      
+
 		
 		
 
 	}
 	
-	private String createTables(String taskName, String dueDate, String people, String details)
+	
+	
+	
+	private String createTables(String taskName, String dueDate, String people, String details, String iD, String currentUser, String currentPass)
 	{
 		//taskName = "Groceries";
 		//Date currentDate = new Date();
@@ -289,6 +322,7 @@ public class EveryTableMain extends HttpServlet {
 		String[] dateParts = dueDate.split("/");
 		Boolean overdue = false;
 		String status = "";
+		String color = "";
 		
 		int month = currentDate.getMonth() + 1;
 		
@@ -297,9 +331,9 @@ public class EveryTableMain extends HttpServlet {
 		
 		if(Integer.parseInt(dateParts[2]) == (currentDate.getYear() + 1900))
 		{
-			System.out.println(Integer.parseInt(dateParts[2]));
-			System.out.println("|Boolean #1|");
-			System.out.println(Integer.parseInt(dateParts[2]) == (currentDate.getYear() +1900));
+//			System.out.println(Integer.parseInt(dateParts[2]));
+//			System.out.println("|Boolean #1|");
+//			System.out.println(Integer.parseInt(dateParts[2]) == (currentDate.getYear() +1900));
 			
 			//System.out.println("Current date ---> " + month);
 			//System.out.println("Due date ---> " + dateParts[0]);
@@ -309,13 +343,13 @@ public class EveryTableMain extends HttpServlet {
 			{
 				//System.out.println((Integer.parseInt(dateParts[1])));
 
-				System.out.println("|Boolean #2|");
-				System.out.println((Integer.parseInt(dateParts[1]) > (0 + month)));
+//				System.out.println("|Boolean #2|");
+//				System.out.println((Integer.parseInt(dateParts[1]) > (0 + month)));
 				if(Integer.parseInt(dateParts[1]) > currentDate.getDate())
 				{
-					System.out.println((Integer.parseInt(dateParts[1])));
-					System.out.println("|Boolean #3|");
-					System.out.println(Integer.parseInt(dateParts[1]) > currentDate.getDate());
+//					System.out.println((Integer.parseInt(dateParts[1])));
+//					System.out.println("|Boolean #3|");
+//					System.out.println(Integer.parseInt(dateParts[1]) > currentDate.getDate());
 					overdue = false;
 					status = "On Time";
 				}
@@ -338,24 +372,28 @@ public class EveryTableMain extends HttpServlet {
 		}
 		else if(Integer.parseInt(dateParts[2]) > (currentDate.getYear() +1900))
 		{
-			System.out.println((Integer.parseInt(dateParts[2])));
-			System.out.println("|Boolean #4|");
-			System.out.println(Integer.parseInt(dateParts[2]) > (currentDate.getYear() +1900));
+//			System.out.println((Integer.parseInt(dateParts[2])));
+//			System.out.println("|Boolean #4|");
+//			System.out.println(Integer.parseInt(dateParts[2]) > (currentDate.getYear() +1900));
 			overdue = false;
 			status = "On Time";
 		}
 		else if(Integer.parseInt(dateParts[2]) < (currentDate.getYear() +1900))
 		{
-			System.out.println((Integer.parseInt(dateParts[2])));
-			System.out.println("|Boolean #5|");
-			System.out.println(Integer.parseInt(dateParts[2]) < (currentDate.getYear() +1900));
+			//System.out.println((Integer.parseInt(dateParts[2])));
+			//System.out.println("|Boolean #5|");
+			//System.out.println(Integer.parseInt(dateParts[2]) < (currentDate.getYear() +1900));
 			overdue = true;
 			status = "Overdue";
 		}
 		
+		if(status == "Overdue")
+			color = "Red";
+		else
+			color = "#1FE5F3";
 
 	
-		String format = "<table>\r\n"
+		String format = "<table style='margin: 5px 0px 5px 10px;float:left'>\r\n"
 				+ "		<tr>\r\n"
 				+ "			<th colspan=\"5\">"
 				+ taskName
@@ -368,12 +406,27 @@ public class EveryTableMain extends HttpServlet {
 				+ "			<td>"
 				+ people
 				+ "</td>\r\n"
-				+ "			<td><p name='statusText'>"
+				+ "			<td><p name='statusText' "
+				+ "         style='color: " + color + "'>"
 				+ status
-				+ "</p></td>\r\n"
-				+ "			<td><input type=\"button\" value=\"Finish Task\"> <input type=\"button\" value=\"Open Task\"></td>\r\n"
-				+ "		</tr>\r\n"
-				+ "		<tr>\r\n"
+				+ "</p></td>"
+				+ "			<td>"
+				+ "				<form>"
+				+ "				  <input type='hidden' name='TABLE_ID' value='"
+				+ iD
+				+ "'>"
+				+ "					<input type='hidden' name='userName' value='"
+				+ currentUser
+				+ "'>"
+				+ "					<input type='hidden' name='passWord' value='"
+				+ currentPass
+				+ "'>"
+				+ "				  <input type='submit' value='Finish task'>"
+				+ ""				//Add 'Open Task', if not lazy enough.
+				+ "				</form>"
+				+ "         </td>"
+				+ "		</tr>"
+				+ "		<tr>"
 				+ "		<td colspan=\"5\"><textarea placeholder=\"*Task Details*\" readonly='yes'>"
 				+ details
 				+ "</textarea></td>\r\n"
@@ -381,24 +434,75 @@ public class EveryTableMain extends HttpServlet {
 				+ "\r\n"
 				+ "		</table>\r\n"
 				+ "&nbsp";
+
+
 		
 		
 		return format;
-		/*
-		out.println(example);
-			
-			
-		for(int i = 0; i < 3; i++)
-		{
-			out.println(example);
-		}
-		*/
 	}
 	
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	
 
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+
+//	      PreparedStatement deleteIt = null;
+//			Connection connection3 = null;
+//			//String tableID = request.getParameter("tableID");
+				
+
+
+
+			
+			
+			/*
+		      try {
+		          DBConnectionTables.getDBConnectionTables();
+			      connection3 = DBConnectionTables.connection;
+			      String delSQL = "DELETE FROM EveryTablePrimary WHERE id = ?";
+			      deleteIt = connection3.prepareStatement(delSQL);
+			      deleteIt.setString(1,request.getParameter("TABLE_ID"));
+		    	 
+		         connection3 = DBConnectionTables.connection;
+
+	          //preparedStatement.setString();
+
+		         ResultSet rs = deleteIt.executeQuery();
+
+		        
+
+		     
+		     		 	 
+
+		         rs.close();
+		         deleteIt.close();
+		         connection3.close();
+		      } catch (SQLException se) {
+		         se.printStackTrace();
+		      } catch (Exception e) {
+		         e.printStackTrace();
+		      } finally {
+		         try {
+		            if (deleteIt != null)
+		               deleteIt.close();
+		         } catch (SQLException se2) {
+		         }
+		         try {
+		            if (connection3 != null)
+		               connection3.close();
+		         } catch (SQLException se) {
+		            se.printStackTrace();
+		         }
+		      }
+			*/
+
+		
+		
+		
 		doGet(request, response);
+		
+		
 	}
 
 }
